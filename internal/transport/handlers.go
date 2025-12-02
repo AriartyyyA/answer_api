@@ -1,23 +1,13 @@
 package transport
 
-import (
-	"encoding/json"
-	"net/http"
-)
+import "github/Ariartyyy/answer_api/internal/service"
 
 type HTTPHandlers struct {
-	//
+	service *service.Service
 }
 
-func NewHTTPHandlers() *HTTPHandlers {
+func NewHTTPHandlers(service *service.Service) *HTTPHandlers {
 	return &HTTPHandlers{
-		//
+		service: service,
 	}
-}
-
-func (h *HTTPHandlers) Health(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{
-		"status": "ok",
-	})
 }

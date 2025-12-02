@@ -14,14 +14,12 @@ type HTTPServer struct {
 
 func NewHTTPServer(httpHandlers *transport.HTTPHandlers) *HTTPServer {
 	return &HTTPServer{
-		httpHandler: transport.NewHTTPHandlers(),
+		httpHandler: httpHandlers,
 	}
 }
 
 func (s *HTTPServer) StartServer() error {
 	router := mux.NewRouter()
-
-	router.Path("/health").Methods("GET").HandlerFunc(s.httpHandler.Health)
 
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		if errors.Is(err, http.ErrServerClosed) {
