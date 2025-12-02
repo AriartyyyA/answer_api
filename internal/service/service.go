@@ -1,6 +1,9 @@
 package service
 
-import "github/Ariartyyy/answer_api/internal/models"
+import (
+	"github/Ariartyyy/answer_api/internal/models"
+	"github/Ariartyyy/answer_api/internal/repository"
+)
 
 type QuestionsService interface {
 	GetQuestions() ([]models.Question, error)
@@ -20,9 +23,9 @@ type Service struct {
 	AnswerService
 }
 
-func NewService() *Service {
+func NewService(repo *repository.Repository) *Service {
 	return &Service{
-		QuestionsService: NewQuestionsService(),
-		AnswerService:    NewAnswerService(),
+		QuestionsService: NewQuestionsService(repo),
+		AnswerService:    NewAnswerService(repo),
 	}
 }

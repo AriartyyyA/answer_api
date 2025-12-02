@@ -1,14 +1,17 @@
 package service
 
-import "github/Ariartyyy/answer_api/internal/models"
+import (
+	"github/Ariartyyy/answer_api/internal/models"
+	"github/Ariartyyy/answer_api/internal/repository"
+)
 
 type questionsService struct {
-	//
+	repo *repository.Repository
 }
 
-func NewQuestionsService() QuestionsService {
+func NewQuestionsService(repo *repository.Repository) QuestionsService {
 	return &questionsService{
-		//
+		repo: repo,
 	}
 }
 
