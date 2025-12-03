@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Question struct {
-	ID         int       `json:"id"`
-	Text       string    `json:"text"`
-	Created_at time.Time `json:"created_at"`
+	ID         int       `gorm:"primaryKey;column:id" json:"id"`
+	Text       string    `gorm:"column:text" json:"text"`
+	Created_at time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 }

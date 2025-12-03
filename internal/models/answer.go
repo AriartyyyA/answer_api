@@ -1,9 +1,11 @@
 package models
 
+import "time"
+
 type Answer struct {
-	ID          int    `json:"id"`
-	Question_ID int    `json:"question_id"`
-	UserID      string `json:"user_id"`
-	Text        string `json:"text"`
-	Created_at  string `json:"created_at"`
+	ID          int       `gorm:"primaryKey;column:id" json:"id"`
+	Question_ID int       `gorm:"column:question_id" json:"question_id"`
+	UserID      string    `gorm:"column:user_id" json:"user_id"`
+	Text        string    `gorm:"column:text" json:"text"`
+	Created_at  time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 }

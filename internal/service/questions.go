@@ -15,18 +15,33 @@ func NewQuestionsService(repo *repository.Repository) QuestionsService {
 	}
 }
 
-func (q *questionsService) CreateQuestion(text string) (models.Question, error) {
-	panic("unimplemented")
+func (s *questionsService) CreateQuestion(text string) (*models.Question, error) {
+	question, err := s.repo.CreateQuestion(text)
+	if err != nil {
+		return nil, err
+	}
+
+	return question, nil
 }
 
-func (q *questionsService) DeleteQuestionByIDWithAnswers(id int) error {
-	panic("unimplemented")
+func (s *questionsService) DeleteQuestionByIDWithAnswers(id int) error {
+	return s.repo.DeleteQuestionByIDWithAnswers(id)
 }
 
-func (q *questionsService) GetQuestionByID(id int) (models.Question, error) {
-	panic("unimplemented")
+func (s *questionsService) GetQuestionByID(id int) (*models.Question, error) {
+	question, err := s.repo.GetQuestionByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return question, nil
 }
 
-func (q *questionsService) GetQuestions() ([]models.Question, error) {
-	panic("unimplemented")
+func (s *questionsService) GetQuestions() ([]models.Question, error) {
+	questions, err := s.repo.GetQuestions()
+	if err != nil {
+		return nil, err
+	}
+
+	return questions, nil
 }

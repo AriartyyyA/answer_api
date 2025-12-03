@@ -15,14 +15,33 @@ func NewAnswerService(repo *repository.Repository) AnswerService {
 	}
 }
 
-func (a *answerService) AddAnswerToQuestion(questionID int, text string) (models.Answer, error) {
-	panic("unimplemented")
+func (a *answerService) AddAnswerToQuestion(questionID int, userID, text string) (models.Answer, error) {
+	answer, err := a.repo.AddAnswerToQuestion(questionID, userID, text)
+	if err != nil {
+		return models.Answer{}, err
+	}
+
+	return *answer, nil
 }
 
 func (a *answerService) DeleteAnswerByID(id int) error {
-	panic("unimplemented")
+	return a.repo.DeleteAnswerByID(id)
 }
 
 func (a *answerService) GetAnswerByID(id int) (models.Answer, error) {
-	panic("unimplemented")
+	answer, err := a.repo.GetAnswerByID(id)
+	if err != nil {
+		return models.Answer{}, err
+	}
+
+	return *answer, nil
+}
+
+func (a *answerService) GetAnswersByQuestionID(questionID int) ([]models.Answer, error) {
+	answers, err := a.repo.GetAnswersByQuestionID(questionID)
+	if err != nil {
+		return nil, err
+	}
+
+	return answers, nil
 }

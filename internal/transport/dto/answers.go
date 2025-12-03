@@ -4,7 +4,8 @@ import "time"
 
 // POST /questions/{question_id}/answers
 type AddAnswerRequest struct {
-	Text string `json:"text"`
+	Text   string `json:"text"`
+	UserID string `json:"user_id"`
 }
 
 // Используем во многих ответах

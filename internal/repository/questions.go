@@ -16,18 +16,48 @@ func NewQuestionsRepository(db *gorm.DB) QuestionsRepository {
 	}
 }
 
-func (q *questionsRepository) CreateQuestion(text string) (models.Question, error) {
-	panic("unimplemented")
+func (r *questionsRepository) CreateQuestion(text string) (*models.Question, error) {
+	question := &models.Question{
+		Text: text,
+	}
+
+	if err := r.db.Create(question).Error; err != nil {
+		return nil, err
+	}
+
+	return question, nil
 }
 
-func (q *questionsRepository) DeleteQuestionByIDWithAnswers(id int) error {
-	panic("unimplemented")
+func (r *questionsRepository) DeleteQuestionByIDWithAnswers(id int) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("question_id = ?", id).Delete(&models.Answer{}).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Delete(&models.Question{}, id).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
-func (q *questionsRepository) GetQuestionByID(id int) (models.Question, error) {
-	panic("unimplemented")
+func (r *questionsRepository) GetQuestionByID(id int) (*models.Question, error) {
+	var question models.Question
+
+	if err := r.db.First(&question, id).Error; err != nil {
+		return nil, err
+	}
+
+	return &question, nil
 }
 
-func (q *questionsRepository) GetQuestions() ([]models.Question, error) {
-	panic("unimplemented")
+func (r *questionsRepository) GetQuestions() ([]models.Question, error) {
+	var questions []models.Question
+
+	if err := r.db.Order("created_at DESC").Find(&questions).Error; err != nil {
+		return nil, err
+	}
+
+	return questions, nil
 }
