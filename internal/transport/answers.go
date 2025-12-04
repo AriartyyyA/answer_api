@@ -14,19 +14,19 @@ func (h *HTTPHandlers) AddAnswerToQuestionHandler(w http.ResponseWriter, r *http
 	questionIDStr := vars["question_id"]
 	questionID, err := strconv.Atoi(questionIDStr)
 	if err != nil {
-		http.Error(w, "Invalid question ID", http.StatusBadRequest)
+		WriteJSONError(w, "Invalid question ID", http.StatusBadRequest)
 		return
 	}
 
 	var req dto.AddAnswerRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		WriteJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	answer, err := h.service.AddAnswerToQuestion(questionID, req.UserID, req.Text)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -40,7 +40,7 @@ func (h *HTTPHandlers) AddAnswerToQuestionHandler(w http.ResponseWriter, r *http
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -50,13 +50,13 @@ func (h *HTTPHandlers) GetAnswerByIDHandler(w http.ResponseWriter, r *http.Reque
 	idStr := vars["id"]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid answer ID", http.StatusBadRequest)
+		WriteJSONError(w, "Invalid answer ID", http.StatusBadRequest)
 		return
 	}
 
 	answer, err := h.service.GetAnswerByID(id)
 	if err != nil {
-		http.Error(w, "Answer not found", http.StatusNotFound)
+		WriteJSONError(w, "Answer not found", http.StatusNotFound)
 		return
 	}
 
@@ -70,7 +70,7 @@ func (h *HTTPHandlers) GetAnswerByIDHandler(w http.ResponseWriter, r *http.Reque
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -80,12 +80,12 @@ func (h *HTTPHandlers) DeleteAnswerByIDHandler(w http.ResponseWriter, r *http.Re
 	idStr := vars["id"]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid answer ID", http.StatusBadRequest)
+		WriteJSONError(w, "Invalid answer ID", http.StatusBadRequest)
 		return
 	}
 
 	if err := h.service.DeleteAnswerByID(id); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 

@@ -12,12 +12,12 @@ import (
 func (h *HTTPHandlers) GetQuestions(w http.ResponseWriter, r *http.Request) {
 	questions, err := h.service.GetQuestions()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(questions); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -26,13 +26,13 @@ func (h *HTTPHandlers) CreateQuestion(w http.ResponseWriter, r *http.Request) {
 	var req dto.CreateQuestionRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		WriteJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	question, err := h.service.CreateQuestion(req.Text)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		WriteJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -44,7 +44,7 @@ func (h *HTTPHandlers) CreateQuestion(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -52,24 +52,22 @@ func (h *HTTPHandlers) CreateQuestion(w http.ResponseWriter, r *http.Request) {
 func (h *HTTPHandlers) GetQuestionByIDWithAnswers(w http.ResponseWriter, r *http.Request) {
 	id, err := getIDFromPath(r)
 	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		WriteJSONError(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
 
 	question, err := h.service.GetQuestionByID(id)
 	if err != nil {
-		http.Error(w, "Question not found", http.StatusNotFound)
+		WriteJSONError(w, "Question not found", http.StatusNotFound)
 		return
 	}
 
-	// Получаем ответы для вопроса
 	answers, err := h.service.GetAnswersByQuestionID(id)
 	if err != nil {
-		http.Error(w, "Failed to get answers", http.StatusInternalServerError)
+		WriteJSONError(w, "Failed to get answers", http.StatusInternalServerError)
 		return
 	}
 
-	// Формируем ответ
 	resp := dto.GetQuestionByIDResponse{
 		ID:         question.ID,
 		Text:       question.Text,
@@ -79,7 +77,7 @@ func (h *HTTPHandlers) GetQuestionByIDWithAnswers(w http.ResponseWriter, r *http
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -87,11 +85,11 @@ func (h *HTTPHandlers) GetQuestionByIDWithAnswers(w http.ResponseWriter, r *http
 func (h *HTTPHandlers) DeleteQuestionByID(w http.ResponseWriter, r *http.Request) {
 	id, err := getIDFromPath(r)
 	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		WriteJSONError(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
 	if err := h.service.DeleteQuestionByIDWithAnswers(id); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
