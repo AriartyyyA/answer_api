@@ -5,6 +5,7 @@ import (
 	"github/Ariartyyy/answer_api/internal/transport/dto"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -27,6 +28,11 @@ func (h *HTTPHandlers) CreateQuestion(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		WriteJSONError(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if strings.TrimSpace(req.Text) == "" {
+		WriteJSONError(w, "Question text cannot be empty", http.StatusBadRequest)
 		return
 	}
 
