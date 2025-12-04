@@ -20,6 +20,7 @@ func NewHTTPServer(httpHandlers *transport.HTTPHandlers) *HTTPServer {
 
 func (s *HTTPServer) StartServer() error {
 	router := mux.NewRouter()
+	router.Use(transport.LoggingMiddleware)
 
 	router.HandleFunc("/questions", s.httpHandler.CreateQuestion).Methods("POST")
 	router.HandleFunc("/questions/{id}", s.httpHandler.GetQuestionByIDWithAnswers).Methods("GET")
